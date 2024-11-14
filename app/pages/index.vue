@@ -12,28 +12,28 @@
 	</section>
 
 	<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 sm:gap-16 mb-10">
-		<FinancialTrend
+		<Trend
 			color="green"
 			title="Income"
 			:amount="5000"
 			:last-amount="1300"
 			:loading="false"
 		/>
-		<FinancialTrend
+		<Trend
 			color="red"
 			title="Expense"
 			:amount="100"
 			:last-amount="10230"
 			:loading="false"
 		/>
-		<FinancialTrend
+		<Trend
 			color="green"
 			title="Investments"
 			:amount="12000"
 			:last-amount="100"
 			:loading="false"
 		/>
-		<FinancialTrend
+		<Trend
 			color="red"
 			title="Saving"
 			:amount="23000"
@@ -42,10 +42,15 @@
 			:loading="false"
 		/>
 	</section>
+
+	<section>
+		<Transactions />
+	</section>
 </template>
 
 <script setup lang="ts">
-import FinancialTrend from '~/components/financial-trend.vue';
+import Transactions from '~/components/transactions.vue';
+import Trend from '~/components/trend.vue';
 import { transactionViewOptions } from '~/utils/constants';
 
 const viewSelected = ref(transactionViewOptions[1]);
