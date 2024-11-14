@@ -11,7 +11,7 @@
 		</div>
 	</section>
 
-	<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 sm:gap-16 mb-10">
+	<section class="trends">
 		<Trend
 			color="green"
 			title="Income"
@@ -59,4 +59,8 @@ import { transactionViewOptions } from '~/utils/constants';
 const viewSelected = ref(transactionViewOptions[1]);
 </script>
 
-<style></style>
+<style>
+.trends {
+	@apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 sm:gap-16 mb-10
+}
+</style>
