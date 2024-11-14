@@ -12,10 +12,35 @@
 	</section>
 
 	<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 sm:gap-16 mb-10">
-		<FinancialTrend />
-		<FinancialTrend />
-		<FinancialTrend />
-		<FinancialTrend />
+		<FinancialTrend
+			color="green"
+			title="Income"
+			:amount="5000"
+			:last-amount="1300"
+			:loading="false"
+		/>
+		<FinancialTrend
+			color="red"
+			title="Expense"
+			:amount="100"
+			:last-amount="10230"
+			:loading="false"
+		/>
+		<FinancialTrend
+			color="green"
+			title="Investments"
+			:amount="12000"
+			:last-amount="100"
+			:loading="false"
+		/>
+		<FinancialTrend
+			color="red"
+			title="Saving"
+			:amount="23000"
+			:last-amount="143000"
+
+			:loading="false"
+		/>
 	</section>
 </template>
 
