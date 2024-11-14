@@ -11,7 +11,7 @@
 				v-if="loading"
 				class="h-8 w-full"
 			/>
-			<span v-else>{{ amount }}</span>
+			<span v-else>{{ currency }}</span>
 		</div>
 		<div>
 			<USkeleton
@@ -47,6 +47,8 @@ const props = defineProps({
 	color: String,
 	loading: Boolean
 });
+
+const { currency } = useCurrency(props.amount);
 
 const trendingUp = computed(
 	() => props.amount >= props.lastAmount
