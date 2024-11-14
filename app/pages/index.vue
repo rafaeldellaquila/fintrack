@@ -45,6 +45,9 @@
 
 	<section>
 		<Transactions />
+		<Transactions />
+		<Transactions />
+		<Transactions />
 	</section>
 </template>
 
