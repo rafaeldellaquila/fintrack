@@ -14,7 +14,7 @@ export default defineNuxtConfig({
 				arrowParens: true,
 				quotes: 'single',
 				quoteProps: 'consistent-as-needed',
-				commaDangle: 'only-multiline'
+				commaDangle: 'only-multiline',
 			}
 		}
 	},
