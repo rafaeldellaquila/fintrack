@@ -6,11 +6,14 @@
 					name="i-heroicons-arrow-up-right"
 					class="text-green-600"
 				/>
-				<span>Salary</span>
+				<span>{{ transaction.description }}</span>
 			</div>
 			<div>
-				<UBadge color="white">
-					Category
+				<UBadge
+					v-if="transaction.category"
+					color="white"
+				>
+					{{ transaction.category }}
 				</UBadge>
 			</div>
 		</div>
@@ -33,7 +36,16 @@
 </template>
 
 <script lang="ts" setup>
-const { currency } = useCurrency(3000);
+import type { TransactionProps } from '~/types';
+
+const { transaction } = defineProps({
+	transaction: {
+		type: Object as PropType<TransactionProps>,
+		required: true
+	}
+});
+
+const { currency } = useCurrency(transaction.amount);
 const items = [
 	[{
 		label: 'Edit',

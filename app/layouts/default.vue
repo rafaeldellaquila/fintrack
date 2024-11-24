@@ -11,6 +11,7 @@
 import Header from '~/components/header.vue';
 
 useHead({
+	title: 'Fintrack',
 	link: [
 		{
 			rel: 'preconnect',

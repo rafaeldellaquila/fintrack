@@ -5,7 +5,7 @@
 		</h1>
 		<div>
 			<USelect
-				v-model="viewSelected"
+				v-model="selectedView"
 				:options="transactionViewOptions"
 			/>
 		</div>
@@ -44,19 +44,28 @@
 	</section>
 
 	<section>
-		<Transactions />
-		<Transactions />
-		<Transactions />
-		<Transactions />
+		<Transaction
+			v-for="transaction in transactions"
+			:key="transaction.id"
+			:transaction="transaction"
+		/>
 	</section>
 </template>
 
 <script setup lang="ts">
-import Transactions from '~/components/transactions.vue';
+import { onMounted, ref } from 'vue';
+import Transaction from '~/components/transaction.vue';
 import Trend from '~/components/trend.vue';
+import { useSupabase } from '~/composables/useSupabase';
+import type { TransactionProps } from '~/types';
 import { transactionViewOptions } from '~/utils/constants';
 
-const viewSelected = ref(transactionViewOptions[1]);
+const selectedView = ref(transactionViewOptions[1]);
+const { data: transactions, fetch: fetchTransactions } = useSupabase<TransactionProps>('transactions');
+
+onMounted(() => {
+	fetchTransactions();
+});
 </script>
 
 <style>

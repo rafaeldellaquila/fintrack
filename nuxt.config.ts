@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-	modules: ['@nuxt/ui', '@nuxt/eslint'],
+	modules: ['@nuxt/ui', '@nuxt/eslint', '@nuxtjs/supabase'],
 	devtools: { enabled: true },
 	future: {
 		compatibilityVersion: 4,
@@ -17,5 +17,8 @@ export default defineNuxtConfig({
 				commaDangle: 'only-multiline',
 			}
 		}
+	},
+	supabase: {
+		redirect: false
 	},
 });
