@@ -12,6 +12,7 @@
 				<UBadge
 					v-if="transaction.category"
 					color="white"
+					class="capitalize"
 				>
 					{{ transaction.category }}
 				</UBadge>
