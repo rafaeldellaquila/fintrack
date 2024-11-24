@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps({
+const { title, amount, lastAmount, color, loading } = defineProps({
 	title: String,
 	amount: {
 		type: Number,
@@ -50,22 +50,17 @@ const props = defineProps({
 	loading: Boolean
 });
 
-const { currency } = useCurrency(props.amount);
+const trendingUp = computed(() => amount >= lastAmount);
+const icon = computed(() => trendingUp.value ? 'i-heroicons-arrow-trending-up' : 'i-heroicons-arrow-trending-down');
 
-const trendingUp = computed(
-	() => props.amount >= props.lastAmount
-);
-
-const icon = computed(
-	() => trendingUp.value ? 'i-heroicons-arrow-trending-up' : 'i-heroicons-arrow-trending-down'
-);
+const { currency } = useCurrency(amount);
 
 const percentageTrend = computed(
 	() => {
-		if (props.amount === 0 || props.lastAmount === 0) return '-';
+		if (amount === 0 || lastAmount === 0) return '-';
 
-		const bigger = Math.max(props.amount, props.lastAmount);
-		const lower = Math.min(props.amount, props.lastAmount);
+		const bigger = Math.max(amount, lastAmount);
+		const lower = Math.min(amount, lastAmount);
 		const ratio = ((bigger - lower) / lower) * 100;
 
 		return `${Math.ceil(ratio)}%`;

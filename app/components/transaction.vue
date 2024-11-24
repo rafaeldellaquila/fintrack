@@ -3,8 +3,8 @@
 		<div class="flex items-center justify-between">
 			<div class="flex items-center space-x-1">
 				<UIcon
-					name="i-heroicons-arrow-up-right"
-					class="text-green-600"
+					:name="icon"
+					:class="[iconColor]"
 				/>
 				<span>{{ transaction.description }}</span>
 			</div>
@@ -22,7 +22,7 @@
 			<div>{{ currency }}</div>
 			<div>
 				<UDropdown
-					:items="items"
+					:items="TransactionMenuItems"
 					:popper="{ placement: 'bottom-start' }"
 				>
 					<UButton
@@ -46,18 +46,11 @@ const { transaction } = defineProps({
 	}
 });
 
+const isIncome = computed(() => transaction.type === 'income');
+const icon = computed(() => isIncome.value ? 'i-heroicons-arrow-up-right' : 'i-heroicons-arrow-up-left');
+const iconColor = computed(() => isIncome.value ? 'text-green-600' : 'text-red-600');
+
 const { currency } = useCurrency(transaction.amount);
-const items = [
-	[{
-		label: 'Edit',
-		icon: 'i-heroicons-pencil-square-20-solid',
-		click: () => console.log('Edit')
-	}, {
-		label: 'Delete',
-		icon: 'i-heroicons-trash-20-solid',
-		click: () => console.log('Delete')
-	}],
-];
 </script>
 
 <style scoped>

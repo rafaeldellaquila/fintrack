@@ -1,3 +1,9 @@
+export enum Views {
+	Yearly = 'Yearly',
+	Monthly = 'Monthly',
+	Daily = 'Daily',
+}
+
 export interface TransactionProps {
 	id: number;
 	amount: number;

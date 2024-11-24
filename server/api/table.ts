@@ -16,6 +16,5 @@ export default defineEventHandler(async (event) => {
 		.match(query || {});
 
 	if (error) throw createError({ statusCode: 500, message: error.message });
-
 	return data;
 });
