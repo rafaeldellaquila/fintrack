@@ -1,3 +1,13 @@
+/**
+ * Format a number as a currency string.
+ *
+ * @param {number | Ref<number>} amount
+ * The number to format.
+ *
+ * @returns {Readonly<{ currency: ComputedRef<string> }>}
+ * An object with a single property `currency`, containing a reactive string
+ * representation of the formatted number in BRL.
+ */
 export function useCurrency(amount: number | Ref<number>): Readonly<{ currency: ComputedRef<string> }> {
 	const currency = computed(
 		() => {

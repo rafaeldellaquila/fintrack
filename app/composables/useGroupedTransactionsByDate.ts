@@ -1,5 +1,17 @@
 import type { TransactionProps } from '~/types';
 
+/**
+ * Groups transactions by date, returning an array of objects
+ * containing the date in the format DD/MM/YYYY and an array
+ * of transactions that occurred on that date.
+ *
+ * The array is sorted by the date in descending order (newest
+ * first).
+ *
+ * @param {Ref<TransactionProps[]>} transactions - The array of transactions.
+ *
+ * @returns {ComputedRef<{ date: string, transactions: TransactionProps[] }[]>} - The grouped transactions.
+ */
 export const useGroupedTransactionsByDate = (transactions: Ref<TransactionProps[]>) => {
 	const transactionsGroupedByDate = computed(() => {
 		if (!transactions.value) return [];
