@@ -49,6 +49,7 @@
 			:key="transaction.id"
 			:transaction="transaction"
 		/>
+		{{ transactionsGroupedByDate }}
 	</section>
 </template>
 
@@ -60,8 +61,21 @@ import { useSupabase } from '~/composables/useSupabase';
 import type { TransactionProps } from '~/types';
 import { transactionViewOptions } from '~/utils/constants';
 
-const selectedView = ref(transactionViewOptions[1]);
 const { data: transactions, fetch: fetchTransactions } = useSupabase<TransactionProps>('transactions');
+
+const transactionsGroupedByDate = computed(() => {
+	const groupedTransactions: Record<string, TransactionProps[]> = {};
+
+	for (const transaction of transactions.value || []) {
+		const date = new Date(transaction.created_at).toISOString().split('T')[0] as string;
+		if (!groupedTransactions[date]) groupedTransactions[date] = [];
+		groupedTransactions[date].push(transaction);
+	}
+	console.log('groupedTransactions', groupedTransactions);
+	return groupedTransactions;
+});
+
+const selectedView = ref(transactionViewOptions[1]);
 
 onMounted(() => {
 	fetchTransactions();
