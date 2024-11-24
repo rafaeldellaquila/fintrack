@@ -44,17 +44,27 @@
 	</section>
 
 	<section>
-		<Transaction
-			v-for="transaction in transactions"
-			:key="transaction.id"
-			:transaction="transaction"
-		/>
-		{{ transactionsGroupedByDate }}
+		<div
+			v-for="({ date, transactions: transactionsOnDay }) in transactionsGroupedByDate"
+			:key="date"
+			class="mb-10"
+		>
+			<TransactionDailySummary
+				:date="date"
+				:transactions="transactionsOnDay"
+			/>
+			<Transaction
+				v-for="transaction in transactionsOnDay"
+				:key="transaction.id"
+				:transaction="transaction"
+			/>
+		</div>
 	</section>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import TransactionDailySummary from '~/components/transaction-daily-summary.vue';
 import Transaction from '~/components/transaction.vue';
 import Trend from '~/components/trend.vue';
 import { useSupabase } from '~/composables/useSupabase';
@@ -62,19 +72,7 @@ import type { TransactionProps } from '~/types';
 import { transactionViewOptions } from '~/utils/constants';
 
 const { data: transactions, fetch: fetchTransactions } = useSupabase<TransactionProps>('transactions');
-
-const transactionsGroupedByDate = computed(() => {
-	const groupedTransactions: Record<string, TransactionProps[]> = {};
-
-	for (const transaction of transactions.value || []) {
-		const date = new Date(transaction.created_at).toISOString().split('T')[0] as string;
-		if (!groupedTransactions[date]) groupedTransactions[date] = [];
-		groupedTransactions[date].push(transaction);
-	}
-	console.log('groupedTransactions', groupedTransactions);
-	return groupedTransactions;
-});
-
+const { transactionsGroupedByDate } = useGroupedTransactionsByDate(transactions as Ref<TransactionProps[]>);
 const selectedView = ref(transactionViewOptions[1]);
 
 onMounted(() => {
