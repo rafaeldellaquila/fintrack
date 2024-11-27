@@ -17,21 +17,21 @@
 			title="Income"
 			:amount="5000"
 			:last-amount="1300"
-			:loading="false"
+			:loading="isLoading"
 		/>
 		<Trend
 			color="red"
 			title="Expense"
 			:amount="100"
 			:last-amount="10230"
-			:loading="false"
+			:loading="isLoading"
 		/>
 		<Trend
 			color="green"
 			title="Investments"
 			:amount="12000"
 			:last-amount="100"
-			:loading="false"
+			:loading="isLoading"
 		/>
 		<Trend
 			color="red"
@@ -39,11 +39,11 @@
 			:amount="23000"
 			:last-amount="143000"
 
-			:loading="false"
+			:loading="isLoading"
 		/>
 	</section>
 
-	<section>
+	<section v-if="!isLoading">
 		<div
 			v-for="({ date, transactions: transactionsOnDay }) in transactionsGroupedByDate"
 			:key="date"
@@ -57,27 +57,63 @@
 				v-for="transaction in transactionsOnDay"
 				:key="transaction.id"
 				:transaction="transaction"
+				@delete="refreshTransactions()"
 			/>
 		</div>
+	</section>
+	<section v-else>
+		<USkeleton
+			v-for="i in 4"
+			:key="i"
+			class="h-8 w-full mb-2"
+		/>
 	</section>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import TransactionDailySummary from '~/components/transaction-daily-summary.vue';
 import Transaction from '~/components/transaction.vue';
 import Trend from '~/components/trend.vue';
-import { useSupabase } from '~/composables/useSupabase';
 import type { TransactionProps } from '~/types';
 import { transactionViewOptions } from '~/utils/constants';
 
-const { data: transactions, fetch: fetchTransactions } = useSupabase<TransactionProps>('transactions');
-const { transactionsGroupedByDate } = useGroupedTransactionsByDate(transactions as Ref<TransactionProps[]>);
+const supabase = useSupabaseClient();
 const selectedView = ref(transactionViewOptions[1]);
+const isLoading = ref(false);
+const transactions = ref<TransactionProps[]>([]);
 
-onMounted(() => {
-	fetchTransactions();
-});
+const fetchTransactions = async () => {
+	isLoading.value = true;
+
+	try {
+		const { data: transactions } = await useAsyncData('transactions',
+			async () => {
+				const { data, error } = await supabase
+					.from('transactions').select('*');
+
+				if (error) return [];
+				return data;
+			});
+
+		return transactions.value ?? [];
+	}
+	catch (error) {
+		console.error('error fetching transactions', error);
+		return [];
+	}
+	finally {
+		isLoading.value = false;
+	}
+};
+
+const refreshTransactions = async () => transactions.value = await fetchTransactions();
+
+const { transactionsGroupedByDate } = useGroupedTransactionsByDate(
+	transactions as Ref<TransactionProps[]>
+);
+
+await refreshTransactions();
 </script>
 
 <style>
