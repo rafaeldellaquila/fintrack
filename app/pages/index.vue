@@ -58,6 +58,10 @@
 				color="white"
 				variant="solid"
 				label="Add"
+				@click="isOpen = true"
+			/>
+			<TransactionModal
+				v-model="isOpen"
 			/>
 		</div>
 	</section>
@@ -97,10 +101,11 @@ import Trend from '~/components/trend.vue';
 import type { TransactionProps } from '~/types';
 import { transactionViewOptions } from '~/utils/constants';
 
-const supabase = useSupabaseClient();
 const selectedView = ref(transactionViewOptions[1]);
-const isLoading = ref(false);
 const transactions = ref<TransactionProps[]>([]);
+const supabase = useSupabaseClient();
+const isLoading = ref(false);
+const isOpen = ref(false);
 
 const income = computed(() => transactions.value.filter((transaction) => transaction.type === 'income'));
 const expense = computed(() => transactions.value.filter((transaction) => transaction.type === 'expense'));
