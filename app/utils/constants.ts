@@ -1,6 +1,7 @@
-import { Views } from '~/types';
+import { CategoriesProps, TransactionTypesProps, ViewsProps } from '~/types';
 
-export const transactionViewOptions: Views[] = [
-	Views.Yearly,
-	Views.Monthly,
-	Views.Daily];
+export const transactionViews: ViewsProps[] = Object.values(ViewsProps);
+
+export const categories: CategoriesProps[] = Object.values(CategoriesProps);
+
+export const transactionTypes: TransactionTypesProps[] = Object.values(TransactionTypesProps);

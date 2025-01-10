@@ -6,7 +6,7 @@
 		<div>
 			<USelect
 				v-model="selectedView"
-				:options="transactionViewOptions"
+				:options="transactionViews"
 			/>
 		</div>
 	</section>
@@ -99,9 +99,9 @@ import TransactionDailySummary from '~/components/transaction-daily-summary.vue'
 import Transaction from '~/components/transaction.vue';
 import Trend from '~/components/trend.vue';
 import type { TransactionProps } from '~/types';
-import { transactionViewOptions } from '~/utils/constants';
+import { transactionViews } from '~/utils/constants';
 
-const selectedView = ref(transactionViewOptions[1]);
+const selectedView = ref(transactionViews[1]);
 const transactions = ref<TransactionProps[]>([]);
 const supabase = useSupabaseClient();
 const isLoading = ref(false);
