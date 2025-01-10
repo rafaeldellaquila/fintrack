@@ -26,5 +26,5 @@ export interface TransactionProps {
 	category: CategoriesProps[];
 	created_at: string;
 	description: string;
-	type: TransactionTypesProps[];
+	type: TransactionTypesProps;
 }

@@ -107,8 +107,8 @@ const supabase = useSupabaseClient();
 const isLoading = ref(false);
 const isOpen = ref(false);
 
-const income = computed(() => transactions.value.filter((transaction) => transaction.type === 'income'));
-const expense = computed(() => transactions.value.filter((transaction) => transaction.type === 'expense'));
+const income = computed(() => transactions.value.filter((transaction) => transaction.type === 'Income'));
+const expense = computed(() => transactions.value.filter((transaction) => transaction.type === 'Expense'));
 
 const incomeCount = computed(() => income.value.length);
 const expenseCount = computed(() => expense.value.length);
@@ -123,7 +123,7 @@ const fetchTransactions = async () => {
 		const { data: transactions } = await useAsyncData('transactions',
 			async () => {
 				const { data, error } = await supabase
-					.from('transactions').select('*');
+					.from('transactions').select('*').order('created_at', { ascending: false });
 
 				if (error) return [];
 				return data;
