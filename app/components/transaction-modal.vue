@@ -11,7 +11,7 @@
 			<UForm
 				ref="form"
 				:state="state"
-				:schema="schema"
+				:schema="TransactionSchema"
 				@submit.prevent="save"
 			>
 				<UFormGroup
@@ -92,9 +92,8 @@
 </template>
 
 <script lang="ts" setup>
-import { z } from 'zod';
-import { CategoriesProps } from '~/types';
 import { categories, transactionTypes } from '~/utils/constants';
+import { TransactionSchema } from '~/utils/zod/transactions';
 
 const props = defineProps({
 	modelValue: {
@@ -103,42 +102,8 @@ const props = defineProps({
 		required: true
 	}
 });
+
 const emits = defineEmits(['update:modelValue']);
-
-const defaultSchema = z.object({
-	amount: z.number().positive('Amount must be greater than 0'),
-	created_at: z.string(),
-	description: z.string().optional(),
-});
-
-const incomeSchema = z.object({
-	type: z.literal('Income'),
-});
-
-const expenseSchema = z.object({
-	type: z.literal('Expense'),
-	category: z.nativeEnum(CategoriesProps)
-});
-
-const savingSchema = z.object({
-	type: z.literal('Saving'),
-});
-
-const investmentSchema = z.object({
-	type: z.literal('Investment'),
-});
-
-const schema = z.intersection(
-	z.discriminatedUnion('type', [incomeSchema, expenseSchema, savingSchema, investmentSchema]),
-	defaultSchema
-);
-
-const form = ref();
-
-const save = async () => {
-	if (form.value.errors.length) return;
-};
-
 const initialState = {
 	type: undefined,
 	amount: 0,
@@ -147,7 +112,12 @@ const initialState = {
 	category: undefined
 };
 
+const form = ref();
 const state = ref({ ...initialState });
+
+const save = async () => {
+	if (form.value.errors.length) return;
+};
 
 const resetForm = () => {
 	Object.assign(state.value, initialState);
