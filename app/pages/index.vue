@@ -15,23 +15,23 @@
 		<Trend
 			color="green"
 			title="Income"
-			:amount="incomeTotal"
+			:amount="transactions.incomeTotal.value"
 			:last-amount="100"
-			:loading="isLoading"
+			:loading="pending"
 		/>
 		<Trend
 			color="red"
 			title="Expense"
-			:amount="expenseTotal"
+			:amount="transactions.expenseTotal.value"
 			:last-amount="100"
-			:loading="isLoading"
+			:loading="pending"
 		/>
 		<Trend
 			color="green"
 			title="Investments"
 			:amount="12000"
 			:last-amount="100"
-			:loading="isLoading"
+			:loading="pending"
 		/>
 		<Trend
 			color="red"
@@ -39,7 +39,7 @@
 			:amount="23000"
 			:last-amount="143000"
 
-			:loading="isLoading"
+			:loading="pending"
 		/>
 	</section>
 
@@ -49,7 +49,9 @@
 				Transactions
 			</h2>
 			<div class="text-gray-500 dark:text-gray-400">
-				You have {{ incomeCount }} incomes and {{ expenseCount }} expenses this period
+				You have {{ transactions.incomeCount.value }}
+				incomes and {{ transactions.expenseCount.value }}
+				expenses this period
 			</div>
 		</div>
 		<div>
@@ -62,14 +64,14 @@
 			/>
 			<TransactionModal
 				v-model="isOpen"
-				@saved="refreshTransactions()"
+				@saved="refresh()"
 			/>
 		</div>
 	</section>
 
-	<section v-if="!isLoading">
+	<section v-if="!pending">
 		<div
-			v-for="({ date, transactions: transactionsOnDay }) in transactionsGroupedByDate"
+			v-for="({ date, transactions: transactionsOnDay }) in transactions.grouped.byDate.value"
 			:key="date"
 			class="mb-10"
 		>
@@ -81,7 +83,7 @@
 				v-for="transaction in transactionsOnDay"
 				:key="transaction.id"
 				:transaction="transaction"
-				@delete="refreshTransactions()"
+				@delete="refresh()"
 			/>
 		</div>
 	</section>
@@ -99,55 +101,18 @@ import { ref } from 'vue';
 import TransactionDailySummary from '~/components/transaction-daily-summary.vue';
 import Transaction from '~/components/transaction.vue';
 import Trend from '~/components/trend.vue';
-import type { TransactionProps } from '~/types';
 import { transactionViews } from '~/utils/constants';
 
 const selectedView = ref(transactionViews[1]);
-const transactions = ref<TransactionProps[]>([]);
-const supabase = useSupabaseClient();
-const isLoading = ref(false);
 const isOpen = ref(false);
 
-const income = computed(() => transactions.value.filter((transaction) => transaction.type === 'Income'));
-const expense = computed(() => transactions.value.filter((transaction) => transaction.type === 'Expense'));
+const {
+	pending,
+	refresh,
+	transactions
+} = useFetchTransactions()
 
-const incomeCount = computed(() => income.value.length);
-const expenseCount = computed(() => expense.value.length);
-
-const incomeTotal = computed(() => income.value.reduce((acc, transaction) => acc + transaction.amount, 0));
-const expenseTotal = computed(() => expense.value.reduce((acc, transaction) => acc + transaction.amount, 0));
-
-const fetchTransactions = async () => {
-	isLoading.value = true;
-
-	try {
-		const { data: transactions } = await useAsyncData('transactions',
-			async () => {
-				const { data, error } = await supabase
-					.from('transactions').select('*').order('created_at', { ascending: false });
-
-				if (error) return [];
-				return data;
-			});
-
-		return transactions.value ?? [];
-	}
-	catch (error) {
-		console.error('error fetching transactions', error);
-		return [];
-	}
-	finally {
-		isLoading.value = false;
-	}
-};
-
-const refreshTransactions = async () => transactions.value = await fetchTransactions();
-
-const { transactionsGroupedByDate } = useGroupedTransactionsByDate(
-	transactions as Ref<TransactionProps[]>
-);
-
-await refreshTransactions();
+await refresh();
 </script>
 
 <style>

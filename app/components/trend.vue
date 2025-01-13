@@ -39,6 +39,7 @@ const icon = computed(() => trendingUp.value ? 'i-heroicons-arrow-trending-up' :
 
 const { currency } = useCurrency(amount);
 
+console.log(amount, lastAmount)
 const percentageTrend = computed(
 	() => {
 		if (amount === 0 || lastAmount === 0) return '-';
