@@ -62,6 +62,7 @@
 			/>
 			<TransactionModal
 				v-model="isOpen"
+				@saved="refreshTransactions()"
 			/>
 		</div>
 	</section>

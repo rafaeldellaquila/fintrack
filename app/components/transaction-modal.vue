@@ -71,10 +71,12 @@ const save = async () => {
 	isLoading.value = true;
 
 	try {
-		console.log('state', state.value);
 		const { error } = await supabase.from('transactions').upsert({
 			...state.value
 		});
+
+		console.log(error)
+
 		if (!error) {
 			toast.add({
 				title: 'Transaction Success',
@@ -83,13 +85,18 @@ const save = async () => {
 			});
 			isOpen.value = false;
 			emit('saved');
+
+			return
 		}
-	} catch (e) {
-		if (e instanceof Error) {
+
+		throw Error("Failed to Connect with the database. Check your connection.");
+
+	} catch (error) {
+		if (error instanceof Error) {
 			toast.add({
 				title: 'Transaction Error',
 				icon: 'i-heroicons-exclamation-circle',
-				description: e.message,
+				description: error.message,
 				color: 'red'
 			});
 			isOpen.value = false;
