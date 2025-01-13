@@ -89,7 +89,7 @@ const save = async () => {
 			return
 		}
 
-		throw Error("Failed to Connect with the database. Check your connection.");
+		throw Error("Check your connection.");
 
 	} catch (error) {
 		if (error instanceof Error) {
