@@ -83,6 +83,7 @@
 					type="submit"
 					color="black"
 					variant="solid"
+					:loading="isLoading"
 				>
 					Save
 				</UButton>
@@ -92,6 +93,7 @@
 </template>
 
 <script lang="ts" setup>
+import { CategoriesProps, TransactionTypesProps, type TransactionProps } from '~/types';
 import { categories, transactionTypes } from '~/utils/constants';
 import { TransactionSchema } from '~/utils/zod/transactions';
 
@@ -103,20 +105,56 @@ const props = defineProps({
 	}
 });
 
-const emits = defineEmits(['update:modelValue']);
-const initialState = {
-	type: undefined,
+const emits = defineEmits(['update:modelValue', 'saved']);
+const initialState: TransactionProps = {
+	type: TransactionTypesProps.income,
 	amount: 0,
-	created_at: undefined,
-	description: undefined,
-	category: undefined
+	created_at: '',
+	description: '',
+	category: undefined,
 };
 
-const form = ref();
 const state = ref({ ...initialState });
+
+
+const supabase  = useSupabaseClient<TransactionProps>();
+const toast = useToast();
+const form = ref();
+const isLoading = ref(false);
 
 const save = async () => {
 	if (form.value.errors.length) return;
+
+	isLoading.value = true;
+	try {
+		console.log('state', state.value);
+		const { error } = await supabase.from('transactions').upsert({
+			...state.value
+		});
+
+		if (!error) {
+			toast.add({
+				title: 'Success',
+				icon: 'i-heroicons-check-circle',
+				description: 'Transaction saved successfully',
+			});
+
+			isOpen.value = false;
+		}
+	}
+	catch (e) {
+		if (e instanceof Error) {
+    toast.add({
+      title: 'Error',
+      icon: 'i-heroicons-check-circle',
+      description: e.message,
+      color: 'red'
+    });
+  }
+	}
+	finally {
+		isLoading.value = false;
+	}
 };
 
 const resetForm = () => {

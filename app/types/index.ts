@@ -21,10 +21,10 @@ export enum TransactionTypesProps {
 }
 
 export interface TransactionProps {
-	id: number;
+	id?: number;
 	amount: number;
-	category: CategoriesProps[];
+	category?: CategoriesProps;
 	created_at: string;
-	description: string;
+	description?: string;
 	type: TransactionTypesProps;
 }
