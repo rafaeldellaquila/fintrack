@@ -19,7 +19,7 @@ const { date, transactions } = defineProps({
 
 const sum = computed(() =>
 	(transactions as TransactionProps[]).reduce((acc, transaction) => {
-		if (transaction.type === 'income') acc += transaction.amount;
+		if (transaction.type === 'Income') acc += transaction.amount;
 		else acc -= transaction.amount;
 		return acc;
 	}, 0)

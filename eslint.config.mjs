@@ -26,6 +26,7 @@ export default withNuxt({
 		'import/order': 'error',
 		'@stylistic/max-len': ['warn', { code: 120 }],
 		'vue/no-multiple-template-root': 'off',
-		'vue/multi-word-component-names': 'off'
+		'vue/multi-word-component-names': 'off',
+		'vue/require-default-prop': 'off'
 	}
 });
