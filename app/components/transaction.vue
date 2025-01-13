@@ -1,40 +1,30 @@
 <template>
-	<div class="grid grid-cols-3 py-4 border-b border-gray-200 dark:border-gray-800 text-gray-900 dark:text-gray-100">
-		<div class="flex items-center justify-between space-x-4 col-span-2">
-			<div class="flex items-center space-x-1">
-				<UIcon
-					:name="icon"
-					:class="[iconColor]"
-				/>
-				<span>{{ transaction.description }}</span>
-			</div>
-			<div>
-				<UBadge
-					v-if="transaction.category"
-					color="white"
-					class="capitalize"
-				>
-					{{ transaction.category }}
-				</UBadge>
-			</div>
+<div class="grid grid-cols-3 py-4 border-b border-gray-200 dark:border-gray-800 text-gray-900 dark:text-gray-100">
+	<div class="flex items-center justify-between space-x-4 col-span-2">
+		<div class="flex items-center space-x-1">
+			<UIcon :name="icon" :class="[iconColor]" />
+			<span>{{ transaction.description }}</span>
 		</div>
-		<div class="flex items-center justify-end space-x-2">
-			<div>{{ currency }}</div>
-			<div>
-				<UDropdown
-					:items="TransactionMenuItems"
-					:popper="{ placement: 'bottom-start' }"
-				>
-					<UButton
-						color="white"
-						variant="ghost"
-						trailing-icon="i-heroicons-ellipsis-horizontal"
-						:loading="isLoading"
-					/>
-				</UDropdown>
-			</div>
+		<div>
+			<UBadge v-if="transaction.category" color="white" class="capitalize">
+				{{ transaction.category }}
+			</UBadge>
 		</div>
 	</div>
+	<div class="flex items-center justify-end space-x-2">
+		<div>{{ currency }}</div>
+		<div>
+			<UDropdown :items="TransactionMenuItems" :popper="{ placement: 'bottom-start' }">
+				<UButton
+					color="white"
+					variant="ghost"
+					trailing-icon="i-heroicons-ellipsis-horizontal"
+					:loading="isLoading"
+				/>
+			</UDropdown>
+		</div>
+	</div>
+</div>
 </template>
 
 <script lang="ts" setup>
@@ -60,6 +50,7 @@ const iconColor = computed(() => isIncome.value ? 'text-green-600' : 'text-red-6
 
 const deleteTransaction = async () => {
 	isLoading.value = true;
+	if(transaction.id === undefined) return;
 
 	try {
 		await supabase.from('transactions').delete().eq('id', transaction.id);

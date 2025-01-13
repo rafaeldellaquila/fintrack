@@ -1,38 +1,22 @@
 <template>
-	<div>
-		<div
-			class="font-bold"
-			:class="[color]"
-		>
-			{{ title }}
-		</div>
-		<div class="text-2xl font-extrabold text-black dark:text-white mb-2">
-			<USkeleton
-				v-if="loading"
-				class="h-8 w-full"
-			/>
-			<span v-else>{{ currency }}</span>
-		</div>
-		<div>
-			<USkeleton
-				v-if="loading"
-				class="h-6 w-full"
-			/>
-			<span
-				v-else
-				class="flex space-x-1 items-center text-sm"
-			>
-				<UIcon
-					:name="icon"
-					class="w-6 h-6"
-					:class="{ green: trendingUp, red: !trendingUp }"
-				/>
-				<div class="text-gray-500 dark:text-gray-400">
-					{{ percentageTrend }} vs last period
-				</div>
-			</span>
-		</div>
+<div>
+	<div class="font-bold" :class="[color]">
+		{{ title }}
 	</div>
+	<div class="text-2xl font-extrabold text-black dark:text-white mb-2">
+		<USkeleton v-if="loading" class="h-8 w-full" />
+		<span v-else>{{ currency }}</span>
+	</div>
+	<div>
+		<USkeleton v-if="loading" class="h-6 w-full" />
+		<span v-else class="flex space-x-1 items-center text-sm">
+			<UIcon :name="icon" class="w-6 h-6" :class="{ green: trendingUp, red: !trendingUp }" />
+			<div class="text-gray-500 dark:text-gray-400">
+				{{ percentageTrend }} vs last period
+			</div>
+		</span>
+	</div>
+</div>
 </template>
 
 <script lang="ts" setup>
