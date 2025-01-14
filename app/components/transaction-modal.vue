@@ -27,7 +27,11 @@
 			</UFormGroup>
 
 			<UFormGroup v-if="state.type === 'Expense'" label="Category" name="category" class="mb-4">
-				<USelect v-model="state.category" :required="true" placeholder="Category" :options="categories" />
+				<USelect
+					v-model="state.category"
+					:required="true"
+					placeholder="Category"
+					:options="[...categories]" />
 			</UFormGroup>
 
 			<UButton type="submit" color="black" variant="solid" :loading="isLoading">
@@ -39,7 +43,7 @@
 </template>
 
 <script lang="ts" setup>
-import { TransactionTypesProps, type TransactionProps } from '~/types';
+import type {  TransactionProps } from '~/types';
 import { categories, transactionTypes } from '~/utils/constants';
 import { TransactionSchema } from '~/utils/zod/transactions';
 
@@ -53,7 +57,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'saved']);
 const initialState: TransactionProps = {
-	type: TransactionTypesProps.income,
+	type: 'Income',
 	amount: 0,
 	created_at: '',
 	description: '',
@@ -74,8 +78,6 @@ const save = async () => {
 		const { error } = await supabase.from('transactions').upsert({
 			...state.value
 		});
-
-		console.log(error)
 
 		if (!error) {
 			toast.add({

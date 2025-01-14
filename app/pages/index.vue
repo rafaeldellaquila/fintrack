@@ -15,15 +15,15 @@
 		<Trend
 			color="green"
 			title="Income"
-			:amount="transactions.incomeTotal.value"
-			:last-amount="100"
+			:amount="incomeTotal"
+			:last-amount="previousIncomeTotal"
 			:loading="pending"
 		/>
 		<Trend
 			color="red"
 			title="Expense"
-			:amount="transactions.expenseTotal.value"
-			:last-amount="100"
+			:amount="expenseTotal"
+			:last-amount="previousExpenseTotal"
 			:loading="pending"
 		/>
 		<Trend
@@ -49,8 +49,8 @@
 				Transactions
 			</h2>
 			<div class="text-gray-500 dark:text-gray-400">
-				You have {{ transactions.incomeCount.value }}
-				incomes and {{ transactions.expenseCount.value }}
+				You have {{ incomeCount }}
+				incomes and {{ expenseCount }}
 				expenses this period
 			</div>
 		</div>
@@ -71,7 +71,7 @@
 
 	<section v-if="!pending">
 		<div
-			v-for="({ date, transactions: transactionsOnDay }) in transactions.grouped.byDate.value"
+			v-for="({ date, transactions: transactionsOnDay }) in byDate"
 			:key="date"
 			class="mb-10"
 		>
@@ -101,18 +101,38 @@ import { ref } from 'vue';
 import TransactionDailySummary from '~/components/transaction-daily-summary.vue';
 import Transaction from '~/components/transaction.vue';
 import Trend from '~/components/trend.vue';
+import type { ViewsProps } from '~/types';
 import { transactionViews } from '~/utils/constants';
 
-const selectedView = ref(transactionViews[1]);
 const isOpen = ref(false);
+const selectedView = ref(transactionViews[1]);
+
+const {current, previous} = useSelectedTimePeriod(selectedView as Ref<ViewsProps>);
 
 const {
 	pending,
 	refresh,
-	transactions
-} = useFetchTransactions()
+	transactions: {
+		incomeCount,
+		expenseCount,
+		incomeTotal,
+		expenseTotal,
+		grouped: {
+			byDate
+		}
+	}
+} = useFetchTransactions(current);
 
-await refresh();
+const {
+	refresh: refreshPrevious,
+	transactions: {
+		incomeTotal: previousIncomeTotal,
+		expenseTotal: previousExpenseTotal,
+
+	}
+} = useFetchTransactions(previous);
+
+await Promise.all([refresh(), refreshPrevious()]);
 </script>
 
 <style>

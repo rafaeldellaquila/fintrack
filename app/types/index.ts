@@ -1,24 +1,13 @@
-export enum ViewsProps {
-	yearly = 'Yearly',
-	monthly = 'Monthly',
-	daily = 'Daily',
-}
+export type ViewsProps = 'Yearly' | 'Monthly' | 'Daily';
 
-export enum CategoriesProps {
-	food = 'Food',
-	housing = 'Housing',
-	transport = 'Transport',
-	health = 'Health',
-	education = 'Education',
-	entertainment = 'Entertainment',
-}
+export type Period = {
+  from: Date;
+  to: Date;
+};
 
-export enum TransactionTypesProps {
-	income = 'Income',
-	expense = 'Expense',
-	saving = 'Saving',
-	investment = 'Investment',
-}
+export type CategoriesProps = 'Food' | 'Housing' | 'Transport' | 'Health' | 'Education' | 'Entertainment';
+
+export type TransactionTypesProps = 'Income' | 'Expense' | 'Saving' | 'Investment';
 
 export interface TransactionProps {
 	id?: number;

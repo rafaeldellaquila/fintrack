@@ -1,6 +1,6 @@
-import type { TransactionProps } from "~/types";
+import type {  Period, TransactionProps } from "~/types";
 
-export const useFetchTransactions = () => {
+export const useFetchTransactions = (period: Ref<Period>) => {
 const supabase = useSupabaseClient();
 const transactions = ref<TransactionProps[]>([]);
 const pending = ref(false);
@@ -14,31 +14,35 @@ const expenseCount = computed(() => expense.value.length);
 const incomeTotal = computed(() => income.value.reduce((acc, transaction) => acc + transaction.amount, 0));
 const expenseTotal = computed(() => expense.value.reduce((acc, transaction) => acc + transaction.amount, 0));
 
+
 const fetchTransactions = async () => {
-	pending.value = true;
+  pending.value = true;
 
-	try {
-		const { data: transactions } = await useAsyncData('transactions',
-			async () => {
-				const { data, error } = await supabase
-					.from('transactions').select('*').order('created_at', { ascending: false });
+  try {
+    const { data, error } = await supabase
+      .from('transactions')
+      .select('*')
+      .gte('created_at', period.value.from.toISOString())
+      .lte('created_at', period.value.to.toISOString())
+      .order('created_at', { ascending: false });
 
-				if (error) return [];
-				return data;
-			});
+    if (error) {
+      console.error('Error fetching transactions:', error);
+      return [];
+    }
 
-		return transactions.value ?? [];
-	}
-	catch (error) {
-		console.error('error fetching transactions', error);
-		return [];
-	}
-	finally {
-		pending.value = false;
-	}
+    return data ?? [];
+  } catch (error) {
+    console.error('Error fetching transactions:', error);
+    return [];
+  } finally {
+    pending.value = false;
+  }
 };
 
+
 const refresh = async () => transactions.value = await fetchTransactions();
+watch(period, async () => await refresh());
 
 const transactionsGroupedByDate = computed(() => {
   if (!transactions.value) return [];
