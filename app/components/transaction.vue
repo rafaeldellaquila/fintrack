@@ -28,6 +28,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useAppToast } from '~/composables/useAppToast'
 import type { TransactionProps } from '~/types'
 
 const { transaction } = defineProps({
@@ -40,7 +41,7 @@ const { transaction } = defineProps({
 const emit = defineEmits(['delete'])
 
 const isLoading = ref(false)
-const toast = useToast()
+const { toastSuccess, toastError } = useAppToast()
 const supabase = useSupabaseClient()
 const { currency } = useCurrency(transaction.amount)
 
@@ -55,19 +56,15 @@ const deleteTransaction = async () => {
   try {
     await supabase.from('transactions').delete().eq('id', transaction.id)
 
-    toast.add({
-      title: 'Transaction deleted',
-      icon: 'i-heroicons-check-circle',
-      color: 'green'
+    toastSuccess({
+      title: 'Transaction deleted'
     })
 
     emit('delete', transaction.id)
   } catch (error) {
     console.error('error deleting transaction', error)
-    toast.add({
-      title: 'Error deleting transaction',
-      icon: 'i-heroicons-exclamation-circle',
-      color: 'red'
+    toastError({
+      title: 'Error deleting transaction'
     })
   } finally {
     isLoading.value = false

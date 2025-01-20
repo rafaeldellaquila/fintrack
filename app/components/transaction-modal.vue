@@ -43,6 +43,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useAppToast } from '~/composables/useAppToast'
 import type { TransactionProps } from '~/types'
 import { categories, transactionTypes } from '~/utils/constants'
 import { TransactionSchema } from '~/utils/zod/transactions'
@@ -65,7 +66,7 @@ const initialState: TransactionProps = {
 }
 const state = ref({ ...initialState })
 const supabase = useSupabaseClient<TransactionProps>()
-const toast = useToast()
+const { toastSuccess, toastError } = useAppToast()
 const form = ref()
 const isLoading = ref(false)
 
@@ -80,9 +81,8 @@ const save = async () => {
     })
 
     if (!error) {
-      toast.add({
+      toastSuccess({
         title: 'Transaction Success',
-        icon: 'i-heroicons-check-circle',
         description: 'Transaction saved successfully'
       })
       isOpen.value = false
@@ -95,11 +95,9 @@ const save = async () => {
 
   } catch (error) {
     if (error instanceof Error) {
-      toast.add({
+      toastError({
         title: 'Transaction Error',
-        icon: 'i-heroicons-exclamation-circle',
-        description: error.message,
-        color: 'red'
+        description: error.message
       })
       isOpen.value = false
     }
