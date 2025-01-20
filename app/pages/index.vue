@@ -97,42 +97,42 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import TransactionDailySummary from '~/components/transaction-daily-summary.vue';
-import Transaction from '~/components/transaction.vue';
-import Trend from '~/components/trend.vue';
-import type { ViewsProps } from '~/types';
-import { transactionViews } from '~/utils/constants';
+import { ref } from 'vue'
+import TransactionDailySummary from '~/components/transaction-daily-summary.vue'
+import Transaction from '~/components/transaction.vue'
+import Trend from '~/components/trend.vue'
+import type { ViewsProps } from '~/types'
+import { transactionViews } from '~/utils/constants'
 
-const isOpen = ref(false);
-const selectedView = ref(transactionViews[1]);
+const isOpen = ref(false)
+const selectedView = ref(transactionViews[1])
 
-const {current, previous} = useSelectedTimePeriod(selectedView as Ref<ViewsProps>);
-
-const {
-	pending,
-	refresh,
-	transactions: {
-		incomeCount,
-		expenseCount,
-		incomeTotal,
-		expenseTotal,
-		grouped: {
-			byDate
-		}
-	}
-} = useFetchTransactions(current);
+const {current, previous} = useSelectedTimePeriod(selectedView as Ref<ViewsProps>)
 
 const {
-	refresh: refreshPrevious,
-	transactions: {
-		incomeTotal: previousIncomeTotal,
-		expenseTotal: previousExpenseTotal,
+  pending,
+  refresh,
+  transactions: {
+    incomeCount,
+    expenseCount,
+    incomeTotal,
+    expenseTotal,
+    grouped: {
+      byDate
+    }
+  }
+} = useFetchTransactions(current)
 
-	}
-} = useFetchTransactions(previous);
+const {
+  refresh: refreshPrevious,
+  transactions: {
+    incomeTotal: previousIncomeTotal,
+    expenseTotal: previousExpenseTotal
 
-await Promise.all([refresh(), refreshPrevious()]);
+  }
+} = useFetchTransactions(previous)
+
+await Promise.all([refresh(), refreshPrevious()])
 </script>
 
 <style>

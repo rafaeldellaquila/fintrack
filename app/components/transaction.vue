@@ -28,65 +28,63 @@
 </template>
 
 <script lang="ts" setup>
-import type { TransactionProps } from '~/types';
+import type { TransactionProps } from '~/types'
 
 const { transaction } = defineProps({
-	transaction: {
-		type: Object as PropType<TransactionProps>,
-		required: true
-	}
-});
+  transaction: {
+    type: Object as PropType<TransactionProps>,
+    required: true
+  }
+})
 
-const emit = defineEmits(['delete']);
+const emit = defineEmits(['delete'])
 
-const isLoading = ref(false);
-const toast = useToast();
-const supabase = useSupabaseClient();
-const { currency } = useCurrency(transaction.amount);
+const isLoading = ref(false)
+const toast = useToast()
+const supabase = useSupabaseClient()
+const { currency } = useCurrency(transaction.amount)
 
-const isIncome = computed(() => transaction.type === 'Income');
-const icon = computed(() => isIncome.value ? 'i-heroicons-arrow-up-right' : 'i-heroicons-arrow-up-left');
-const iconColor = computed(() => isIncome.value ? 'text-green-600' : 'text-red-600');
+const isIncome = computed(() => transaction.type === 'Income')
+const icon = computed(() => isIncome.value ? 'i-heroicons-arrow-up-right' : 'i-heroicons-arrow-up-left')
+const iconColor = computed(() => isIncome.value ? 'text-green-600' : 'text-red-600')
 
 const deleteTransaction = async () => {
-	isLoading.value = true;
-	if(transaction.id === undefined) return;
+  isLoading.value = true
+  if(transaction.id === undefined) return
 
-	try {
-		await supabase.from('transactions').delete().eq('id', transaction.id);
+  try {
+    await supabase.from('transactions').delete().eq('id', transaction.id)
 
-		toast.add({
-			title: 'Transaction deleted',
-			icon: 'i-heroicons-check-circle',
-			color: 'green'
-		});
+    toast.add({
+      title: 'Transaction deleted',
+      icon: 'i-heroicons-check-circle',
+      color: 'green'
+    })
 
-		emit('delete', transaction.id);
-	}
-	catch (error) {
-		console.error('error deleting transaction', error);
-		toast.add({
-			title: 'Error deleting transaction',
-			icon: 'i-heroicons-exclamation-circle',
-			color: 'red'
-		});
-	}
-	finally {
-		isLoading.value = false;
-	}
-};
+    emit('delete', transaction.id)
+  } catch (error) {
+    console.error('error deleting transaction', error)
+    toast.add({
+      title: 'Error deleting transaction',
+      icon: 'i-heroicons-exclamation-circle',
+      color: 'red'
+    })
+  } finally {
+    isLoading.value = false
+  }
+}
 
 const TransactionMenuItems = [
-	[{
-		label: 'Edit',
-		icon: 'i-heroicons-pencil-square-20-solid',
-		click: () => console.log('Edit')
-	}, {
-		label: 'Delete',
-		icon: 'i-heroicons-trash-20-solid',
-		click: deleteTransaction
-	}],
-];
+  [{
+    label: 'Edit',
+    icon: 'i-heroicons-pencil-square-20-solid',
+    click: () => console.log('Edit')
+  }, {
+    label: 'Delete',
+    icon: 'i-heroicons-trash-20-solid',
+    click: deleteTransaction
+  }]
+]
 </script>
 
 <style scoped>

@@ -8,22 +8,22 @@
 </template>
 
 <script setup>
-import Header from '~/components/header.vue';
+import Header from '~/components/header.vue'
 
 useHead({
-	title: 'Fintrack',
-	link: [
-		{
-			rel: 'preconnect',
-			href: 'https://fonts.googleapis.com'
-		},
-		{
-			rel: 'stylesheet',
-			href: 'https://fonts.googleapis.com/css2?family=Inter&display=swap',
-			crossorigin: ''
-		}
-	]
-});
+  title: 'Fintrack',
+  link: [
+    {
+      rel: 'preconnect',
+      href: 'https://fonts.googleapis.com'
+    },
+    {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css2?family=Inter&display=swap',
+      crossorigin: ''
+    }
+  ]
+})
 </script>
 
 <style>

@@ -10,22 +10,22 @@
 </template>
 
 <script lang="ts" setup>
-import type { TransactionProps } from '~/types';
+import type { TransactionProps } from '~/types'
 
 const { date, transactions } = defineProps({
-	date: String,
-	transactions: Array
-});
+  date: String,
+  transactions: Array
+})
 
 const sum = computed(() =>
-	(transactions as TransactionProps[]).reduce((acc, transaction) => {
-		if (transaction.type === 'Income') acc += transaction.amount;
-		else acc -= transaction.amount;
-		return acc;
-	}, 0)
-);
+  (transactions as TransactionProps[]).reduce((acc, transaction) => {
+    if (transaction.type === 'Income') acc += transaction.amount
+    else acc -= transaction.amount
+    return acc
+  }, 0)
+)
 
-const { currency } = useCurrency(sum);
+const { currency } = useCurrency(sum)
 </script>
 
 <style scoped>

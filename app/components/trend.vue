@@ -21,37 +21,37 @@
 
 <script lang="ts" setup>
 const props = defineProps({
-	title: String,
-	amount: {
-		type: Number,
-		default: 0
-	},
-	lastAmount: {
-		type: Number,
-		default: 0
-	},
-	color: String,
-	loading: Boolean
-});
+  title: String,
+  amount: {
+    type: Number,
+    default: 0
+  },
+  lastAmount: {
+    type: Number,
+    default: 0
+  },
+  color: String,
+  loading: Boolean
+})
 
 const { amount } = toRefs(props)
 
-const trendingUp = computed(() => amount.value >= props.lastAmount);
-const icon = computed(() => trendingUp.value ? 'i-heroicons-arrow-trending-up' : 'i-heroicons-arrow-trending-down');
+const trendingUp = computed(() => amount.value >= props.lastAmount)
+const icon = computed(() => trendingUp.value ? 'i-heroicons-arrow-trending-up' : 'i-heroicons-arrow-trending-down')
 
-const { currency } = useCurrency(amount);
+const { currency } = useCurrency(amount)
 
 const percentageTrend = computed(
-	() => {
-		if (props.amount === 0 || props.lastAmount === 0) return '-';
+  () => {
+    if (props.amount === 0 || props.lastAmount === 0) return '-'
 
-		const bigger = Math.max(props.amount, props.lastAmount);
-		const lower = Math.min(props.amount, props.lastAmount);
-		const ratio = ((bigger - lower) / lower) * 100;
+    const bigger = Math.max(props.amount, props.lastAmount)
+    const lower = Math.min(props.amount, props.lastAmount)
+    const ratio = ((bigger - lower) / lower) * 100
 
-		return `${Math.ceil(ratio)}%`;
-	}
-);
+    return `${Math.ceil(ratio)}%`
+  }
+)
 </script>
 
 <style>

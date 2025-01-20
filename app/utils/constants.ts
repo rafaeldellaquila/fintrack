@@ -1,17 +1,17 @@
-import type { TransactionTypesProps, ViewsProps } from '~/types';
+import type { TransactionTypesProps, ViewsProps } from '~/types'
 
 export const transactionViews: ViewsProps[] = [
   'Yearly',
   'Monthly',
-  'Daily',
-];
+  'Daily'
+]
 
 export const transactionTypes: TransactionTypesProps[] = [
   'Income',
   'Expense',
   'Saving',
-  'Investment',
-];
+  'Investment'
+]
 
 export const categories = [
   'Food' ,
@@ -20,4 +20,4 @@ export const categories = [
   'Health' ,
   'Education' ,
   'Entertainment'
-] as const;
+] as const

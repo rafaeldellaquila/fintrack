@@ -43,81 +43,81 @@
 </template>
 
 <script lang="ts" setup>
-import type {  TransactionProps } from '~/types';
-import { categories, transactionTypes } from '~/utils/constants';
-import { TransactionSchema } from '~/utils/zod/transactions';
+import type { TransactionProps } from '~/types'
+import { categories, transactionTypes } from '~/utils/constants'
+import { TransactionSchema } from '~/utils/zod/transactions'
 
 const props = defineProps({
-	modelValue: {
-		type: Boolean,
-		default: false,
-		required: true
-	}
-});
+  modelValue: {
+    type: Boolean,
+    default: false,
+    required: true
+  }
+})
 
-const emit = defineEmits(['update:modelValue', 'saved']);
+const emit = defineEmits(['update:modelValue', 'saved'])
 const initialState: TransactionProps = {
-	type: 'Income',
-	amount: 0,
-	created_at: '',
-	description: '',
-	category: undefined,
-};
-const state = ref({ ...initialState });
-const supabase = useSupabaseClient<TransactionProps>();
-const toast = useToast();
-const form = ref();
-const isLoading = ref(false);
+  type: 'Income',
+  amount: 0,
+  created_at: '',
+  description: '',
+  category: undefined
+}
+const state = ref({ ...initialState })
+const supabase = useSupabaseClient<TransactionProps>()
+const toast = useToast()
+const form = ref()
+const isLoading = ref(false)
 
 const save = async () => {
-	if (form.value.errors.length) return;
+  if (form.value.errors.length) return
 
-	isLoading.value = true;
+  isLoading.value = true
 
-	try {
-		const { error } = await supabase.from('transactions').upsert({
-			...state.value
-		});
+  try {
+    const { error } = await supabase.from('transactions').upsert({
+      ...state.value
+    })
 
-		if (!error) {
-			toast.add({
-				title: 'Transaction Success',
-				icon: 'i-heroicons-check-circle',
-				description: 'Transaction saved successfully',
-			});
-			isOpen.value = false;
-			emit('saved');
+    if (!error) {
+      toast.add({
+        title: 'Transaction Success',
+        icon: 'i-heroicons-check-circle',
+        description: 'Transaction saved successfully'
+      })
+      isOpen.value = false
+      emit('saved')
 
-			return
-		}
+      return
+    }
 
-		throw Error("Check your connection.");
+    throw Error('Check your connection.')
 
-	} catch (error) {
-		if (error instanceof Error) {
-			toast.add({
-				title: 'Transaction Error',
-				icon: 'i-heroicons-exclamation-circle',
-				description: error.message,
-				color: 'red'
-			});
-			isOpen.value = false;
-		}
-	} finally {
-		isLoading.value = false;
-	}
-};
+  } catch (error) {
+    if (error instanceof Error) {
+      toast.add({
+        title: 'Transaction Error',
+        icon: 'i-heroicons-exclamation-circle',
+        description: error.message,
+        color: 'red'
+      })
+      isOpen.value = false
+    }
+  } finally {
+    isLoading.value = false
+  }
+}
 
 const resetForm = () => {
-	Object.assign(state.value, initialState);
-	form.value.clear();
-};
+  Object.assign(state.value, initialState)
+  form.value.clear()
+}
 
 const isOpen = computed({
-	get: () => props.modelValue,
-	set: (value) => {
-		if (!value) resetForm();
-		emit('update:modelValue', value);
-	}
-});
+  get: () => props.modelValue,
+  set: (value) => {
+    if (!value) resetForm()
+    emit('update:modelValue', value)
+  }
+})
 </script>
