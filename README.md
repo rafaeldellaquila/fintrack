@@ -3,7 +3,20 @@
 WIP Project for financial tracking.
 Complete Readme soon.
 You can check some documentations inside the code actually.
+
 ## Setup
+
+The project uses Mise for tool versioning.
+Make sure to install it.
+Then run:
+
+```bash
+mise install
+```
+
+This will install all the dependencies and set up the project.
+
+## Bun
 
 Make sure to install the dependencies:
 
